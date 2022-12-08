@@ -1,5 +1,7 @@
 package com.lino.desafio.service;
 
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -9,12 +11,23 @@ import org.springframework.transaction.annotation.Transactional;
 import com.lino.desafio.dto.ClientDTO;
 import com.lino.desafio.entity.Client;
 import com.lino.desafio.repository.ClientRepository;
+import com.lino.desafio.service.exceptions.ResourceNotFoundException;
 
 @Service
 public class ClientService {
 
 	@Autowired
 	private ClientRepository clientRepository;
+
+	@Transactional(readOnly = true)
+	public ClientDTO findById(Long id) {
+
+		Optional<Client> obj = clientRepository.findById(id);
+		Client entity = obj.orElseThrow(() -> new ResourceNotFoundException("Cliente Não encontrado!!"));
+
+		return new ClientDTO(entity);
+
+	}
 
 	@Transactional(readOnly = true)
 	public Page<ClientDTO> findAllPaged(PageRequest pageRequest) {
