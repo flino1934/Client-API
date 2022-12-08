@@ -3,6 +3,8 @@ package com.lino.desafio.service;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -33,8 +35,8 @@ public class ClientService {
 	public Page<ClientDTO> findAllPaged(PageRequest pageRequest) {
 
 		Page<Client> list = clientRepository.findAll(pageRequest);
-		
-		//esta convertendo de entidade para DTO
+
+		// esta convertendo de entidade para DTO
 		return list.map(x -> new ClientDTO(x));
 
 	}
@@ -53,4 +55,16 @@ public class ClientService {
 		return new ClientDTO(entity);
 	}
 
+	public void delete(Long id) {
+
+		try {
+
+			clientRepository.deleteById(id);
+
+		} catch (EmptyResultDataAccessException e) {
+
+			throw new ResourceNotFoundException("Id não encontrado " + id);
+		}
+
+	}
 }
