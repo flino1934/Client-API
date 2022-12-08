@@ -1,10 +1,13 @@
 package com.lino.desafio.dto;
 
+import java.io.Serializable;
 import java.time.Instant;
 
 import com.lino.desafio.entity.Client;
 
-public class ClientDTO {
+public class ClientDTO implements Serializable{
+
+	private static final long serialVersionUID = 1L;
 
 	private Long id;
 	private String name;
